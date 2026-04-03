@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم — تكفيكس</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Cairo',sans-serif; background:#0a0f1e; color:#e8eaf6; min-height:100vh; }
+:root { --blue:#2563eb; --accent:#f59e0b; --card:#111827; --border:rgba(59,130,246,0.18); --muted:#94a3b8; }
+
+/* Login */
+#loginScreen { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:2rem; }
+.login-box { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:2.5rem; width:100%; max-width:380px; text-align:center; }
+.login-box h1 { font-size:1.4rem; font-weight:900; margin-bottom:.3rem; }
+.login-box p { color:var(--muted); font-size:13px; margin-bottom:1.8rem; }
+.login-box input { width:100%; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); color:#fff; border-radius:10px; padding:12px 14px; font-family:'Cairo',sans-serif; font-size:14px; outline:none; margin-bottom:1rem; text-align:center; letter-spacing:3px; }
+.login-box input:focus { border-color:var(--blue); }
+.login-btn { width:100%; background:var(--blue); color:#fff; border:none; border-radius:10px; padding:13px; font-family:'Cairo',sans-serif; font-weight:700; font-size:15px; cursor:pointer; }
+.login-btn:hover { opacity:.9; }
+.login-err { color:#f87171; font-size:13px; margin-top:.6rem; display:none; }
+
+/* Dashboard */
+#dashboard { display:none; }
+.topbar { background:rgba(10,15,30,0.95); border-bottom:1px solid rgba(59,130,246,0.12); padding:0 2rem; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
+.topbar-logo { font-size:18px; font-weight:900; }
+.topbar-logo span { color:var(--accent); }
+.logout-btn { background:transparent; border:1px solid rgba(255,255,255,.15); color:var(--muted); border-radius:8px; padding:7px 16px; font-family:'Cairo',sans-serif; font-size:13px; cursor:pointer; }
+
+.dash-wrap { max-width:1100px; margin:0 auto; padding:2rem; }
+
+.summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem; margin-bottom:2rem; }
+.sum-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.2rem; text-align:center; }
+.sum-num { font-size:2rem; font-weight:900; }
+.sum-label { font-size:12px; color:var(--muted); margin-top:4px; }
+.sum-card.new .sum-num { color:#f59e0b; }
+.sum-card.inprog .sum-num { color:#3b82f6; }
+.sum-card.done .sum-num { color:#10b981; }
+.sum-card.total .sum-num { color:#fff; }
+
+.filters { display:flex; gap:.7rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+.filter-btn { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); color:var(--muted); border-radius:8px; padding:8px 16px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+.filter-btn.active { background:var(--blue); border-color:var(--blue); color:#fff; }
+
+.orders-list { display:flex; flex-direction:column; gap:1rem; }
+.order-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.4rem; }
+.order-card.status-جديد { border-right:3px solid #f59e0b; }
+.order-card.status-قيد-التنفيذ { border-right:3px solid #3b82f6; }
+.order-card.status-مكتمل { border-right:3px solid #10b981; }
+.order-card.status-ملغي { border-right:3px solid #6b7280; }
+
+.order-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:.8rem; flex-wrap:wrap; gap:.5rem; }
+.order-name { font-size:16px; font-weight:700; color:#fff; }
+.order-device { font-size:13px; color:var(--muted); }
+.status-badge { font-size:12px; font-weight:700; padding:4px 12px; border-radius:20px; }
+.badge-جديد { background:rgba(245,158,11,.15); color:#f59e0b; }
+.badge-قيد-التنفيذ { background:rgba(59,130,246,.15); color:#60a5fa; }
+.badge-مكتمل { background:rgba(16,185,129,.15); color:#10b981; }
+.badge-ملغي { background:rgba(107,114,128,.15); color:#9ca3af; }
+
+.order-info { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.5rem .8rem; margin-bottom:1rem; }
+.info-item { font-size:13px; color:var(--muted); }
+.info-item span { color:#e8eaf6; font-weight:600; }
+
+.order-actions { display:flex; gap:.6rem; flex-wrap:wrap; }
+.action-btn { border:none; border-radius:8px; padding:7px 14px; font-family:'Cairo',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:opacity .2s; }
+.action-btn:hover { opacity:.8; }
+.btn-new { background:rgba(245,158,11,.15); color:#f59e0b; border:1px solid rgba(245,158,11,.3); }
+.btn-prog { background:rgba(59,130,246,.15); color:#60a5fa; border:1px solid rgba(59,130,246,.3); }
+.btn-done { background:rgba(16,185,129,.15); color:#10b981; border:1px solid rgba(16,185,129,.3); }
+.btn-cancel { background:rgba(107,114,128,.15); color:#9ca3af; border:1px solid rgba(107,114,128,.3); }
+.btn-map { background:rgba(37,99,235,.15); color:#93c5fd; border:1px solid rgba(59,130,246,.3); text-decoration:none; display:inline-flex; align-items:center; gap:4px; }
+.btn-del { background:rgba(239,68,68,.1); color:#f87171; border:1px solid rgba(239,68,68,.25); }
+
+.empty { text-align:center; padding:4rem 2rem; color:var(--muted); }
+.empty .big { font-size:3rem; margin-bottom:.8rem; }
+.loading-txt { text-align:center; padding:3rem; color:var(--muted); }
+
+.refresh-btn { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:var(--muted); border-radius:8px; padding:8px 16px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:600; cursor:pointer; }
+.refresh-btn:hover { color:#fff; }
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div style="font-size:2.5rem;margin-bottom:1rem;">🔐</div>
+    <h1>لوحة تحكم تكفيكس</h1>
+    <p>أدخل كلمة المرور للدخول</p>
+    <input type="password" id="secretInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()" />
+    <button class="login-btn" onclick="login()">دخول</button>
+    <div class="login-err" id="loginErr">كلمة المرور خاطئة</div>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard">
+  <div class="topbar">
+    <div class="topbar-logo">تك<span>فيكس</span> — لوحة التحكم</div>
+    <div style="display:flex;gap:.7rem;align-items:center;">
+      <button class="refresh-btn" onclick="loadOrders()">🔄 تحديث</button>
+      <button class="logout-btn" onclick="logout()">خروج</button>
+    </div>
+  </div>
+
+  <div class="dash-wrap">
+    <div class="summary">
+      <div class="sum-card new"><div class="sum-num" id="countNew">—</div><div class="sum-label">طلبات جديدة</div></div>
+      <div class="sum-card inprog"><div class="sum-num" id="countProg">—</div><div class="sum-label">قيد التنفيذ</div></div>
+      <div class="sum-card done"><div class="sum-num" id="countDone">—</div><div class="sum-label">مكتملة</div></div>
+      <div class="sum-card total"><div class="sum-num" id="countAll">—</div><div class="sum-label">إجمالي الطلبات</div></div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;">
+      <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('all',this)">الكل</button>
+        <button class="filter-btn" onclick="setFilter('جديد',this)">جديد</button>
+        <button class="filter-btn" onclick="setFilter('قيد-التنفيذ',this)">قيد التنفيذ</button>
+        <button class="filter-btn" onclick="setFilter('مكتمل',this)">مكتمل</button>
+        <button class="filter-btn" onclick="setFilter('ملغي',this)">ملغي</button>
+      </div>
+    </div>
+
+    <div class="orders-list" id="ordersList">
+      <div class="loading-txt">⏳ جاري تحميل الطلبات...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let adminSecret = '';
+  let allOrders = [];
+  let currentFilter = 'all';
+
+  function login() {
+    adminSecret = document.getElementById('secretInput').value.trim();
+    if (!adminSecret) return;
+    document.getElementById('loginErr').style.display = 'none';
+    loadOrders(true);
+  }
+
+  function logout() {
+    adminSecret = '';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('secretInput').value = '';
+  }
+
+  async function loadOrders(isLogin) {
+    try {
+      const res = await fetch('/api/orders', { headers: { 'x-admin-secret': adminSecret } });
+      if (res.status === 401) {
+        if (isLogin) document.getElementById('loginErr').style.display = 'block';
+        return;
+      }
+      allOrders = await res.json();
+      if (isLogin) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+      }
+      updateSummary();
+      renderOrders();
+    } catch(e) {
+      document.getElementById('ordersList').innerHTML = '<div class="loading-txt">❌ خطأ في الاتصال بالسيرفر</div>';
+    }
+  }
+
+  function updateSummary() {
+    document.getElementById('countAll').textContent  = allOrders.length;
+    document.getElementById('countNew').textContent  = allOrders.filter(o => o.status === 'جديد').length;
+    document.getElementById('countProg').textContent = allOrders.filter(o => o.status === 'قيد-التنفيذ').length;
+    document.getElementById('countDone').textContent = allOrders.filter(o => o.status === 'مكتمل').length;
+  }
+
+  function setFilter(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderOrders();
+  }
+
+  function renderOrders() {
+    const list = document.getElementById('ordersList');
+    const filtered = currentFilter === 'all' ? allOrders : allOrders.filter(o => o.status === currentFilter);
+    if (!filtered.length) {
+      list.innerHTML = '<div class="empty"><div class="big">📭</div>لا توجد طلبات</div>';
+      return;
+    }
+    list.innerHTML = filtered.map(o => {
+      const date = new Date(o.createdAt).toLocaleString('ar-SA');
+      const mapBtn = o.lat ? `<a class="action-btn btn-map" href="https://maps.google.com/?q=${o.lat},${o.lng}" target="_blank">📍 الموقع</a>` : '';
+      const statusClass = o.status.replace(/\s/g,'-');
+      return `
+        <div class="order-card status-${statusClass}" id="card-${o.id}">
+          <div class="order-header">
+            <div>
+              <div class="order-name">${o.name}</div>
+              <div class="order-device">${o.device} · ${o.phone}</div>
+            </div>
+            <span class="status-badge badge-${statusClass}">${o.status}</span>
+          </div>
+          <div class="order-info">
+            <div class="info-item">⏰ الوقت: <span>${o.time || 'لم يُحدد'}</span></div>
+            <div class="info-item">📅 التاريخ: <span>${date}</span></div>
+            ${o.address ? `<div class="info-item">📍 العنوان: <span>${o.address}</span></div>` : ''}
+            ${o.problem ? `<div class="info-item" style="grid-column:1/-1">🔧 المشكلة: <span>${o.problem}</span></div>` : ''}
+          </div>
+          <div class="order-actions">
+            <button class="action-btn btn-new"   onclick="updateStatus(${o.id},'جديد')">جديد</button>
+            <button class="action-btn btn-prog"   onclick="updateStatus(${o.id},'قيد-التنفيذ')">قيد التنفيذ</button>
+            <button class="action-btn btn-done"   onclick="updateStatus(${o.id},'مكتمل')">مكتمل ✅</button>
+            <button class="action-btn btn-cancel" onclick="updateStatus(${o.id},'ملغي')">ملغي</button>
+            ${mapBtn}
+            <button class="action-btn btn-del" onclick="deleteOrder(${o.id})">🗑️ حذف</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  async function updateStatus(id, status) {
+    await fetch('/api/orders/' + id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-secret': adminSecret },
+      body: JSON.stringify({ status })
+    });
+    const idx = allOrders.findIndex(o => o.id === id);
+    if (idx !== -1) allOrders[idx].status = status;
+    updateSummary();
+    renderOrders();
+  }
+
+  async function deleteOrder(id) {
+    if (!confirm('تأكيد حذف الطلب؟')) return;
+    await fetch('/api/orders/' + id, { method: 'DELETE', headers: { 'x-admin-secret': adminSecret } });
+    allOrders = allOrders.filter(o => o.id !== id);
+    updateSummary();
+    renderOrders();
+  }
+</script>
+</body>
+</html>

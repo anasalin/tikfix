@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تكفيكس - صيانة من الباب وإليه</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Cairo',sans-serif; background:#0a0f1e; color:#e8eaf6; overflow-x:hidden; }
+:root { --blue:#2563eb; --blue-light:#3b82f6; --accent:#f59e0b; --dark:#0a0f1e; --card:#111827; --border:rgba(59,130,246,0.18); --muted:#94a3b8; }
+
+.navbar { position:sticky; top:0; z-index:100; background:rgba(10,15,30,0.92); backdrop-filter:blur(14px); border-bottom:1px solid rgba(59,130,246,0.12); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; }
+.logo { font-size:22px; font-weight:900; color:#fff; }
+.logo span { color:var(--accent); }
+.nav-links { display:flex; gap:2rem; }
+.nav-links a { color:var(--muted); text-decoration:none; font-size:14px; font-weight:600; transition:color .2s; }
+.nav-links a:hover { color:#fff; }
+.nav-cta { background:var(--blue); color:#fff; border:none; padding:10px 22px; border-radius:10px; font-family:'Cairo',sans-serif; font-weight:700; font-size:14px; cursor:pointer; transition:background .2s; }
+.nav-cta:hover { background:var(--blue-light); }
+
+.hero { min-height:88vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:3rem 1.5rem; background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(37,99,235,0.22) 0%, transparent 70%); }
+.hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(245,158,11,0.13); border:1px solid rgba(245,158,11,0.3); color:var(--accent); font-size:13px; font-weight:700; padding:6px 16px; border-radius:50px; margin-bottom:1.5rem; }
+.hero-badge .dot { width:7px; height:7px; background:var(--accent); border-radius:50%; animation:pulse 1.4s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
+h1 { font-size:clamp(2.2rem,5vw,4rem); font-weight:900; line-height:1.15; margin-bottom:1.2rem; }
+h1 span { color:var(--blue-light); }
+.hero-sub { font-size:1.1rem; color:var(--muted); max-width:500px; margin:0 auto 2.5rem; line-height:1.7; }
+.hero-btns { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+.btn-primary { background:var(--blue); color:#fff; padding:15px 32px; border-radius:12px; font-family:'Cairo',sans-serif; font-weight:700; font-size:16px; border:none; cursor:pointer; transition:all .2s; }
+.btn-primary:hover { background:var(--blue-light); transform:translateY(-2px); }
+.btn-secondary { background:transparent; color:#fff; padding:15px 32px; border-radius:12px; font-family:'Cairo',sans-serif; font-weight:700; font-size:16px; border:1.5px solid rgba(255,255,255,0.18); cursor:pointer; transition:all .2s; }
+.btn-secondary:hover { border-color:var(--blue-light); color:var(--blue-light); }
+
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1px; background:rgba(59,130,246,0.1); border-top:1px solid rgba(59,130,246,0.12); border-bottom:1px solid rgba(59,130,246,0.12); }
+.stat { background:var(--dark); padding:2rem 1rem; text-align:center; }
+.stat-num { font-size:2rem; font-weight:900; color:#fff; }
+.stat-num span { color:var(--accent); }
+.stat-label { font-size:13px; color:var(--muted); margin-top:4px; }
+
+.sec { padding:5rem 2rem; max-width:1100px; margin:0 auto; }
+.section-tag { font-size:12px; font-weight:700; color:var(--blue-light); letter-spacing:2px; text-transform:uppercase; margin-bottom:.8rem; }
+.section-title { font-size:clamp(1.6rem,3vw,2.4rem); font-weight:900; margin-bottom:.6rem; }
+.section-sub { color:var(--muted); font-size:15px; line-height:1.7; margin-bottom:3rem; max-width:520px; }
+
+.how-steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; }
+.step-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:2rem 1.5rem; position:relative; transition:border-color .25s,transform .25s; }
+.step-card:hover { border-color:rgba(59,130,246,.45); transform:translateY(-4px); }
+.step-num { font-size:3rem; font-weight:900; color:rgba(59,130,246,.12); position:absolute; top:1rem; left:1.5rem; line-height:1; }
+.step-icon { font-size:2rem; margin-bottom:1rem; }
+.step-title { font-size:16px; font-weight:700; margin-bottom:.5rem; color:#fff; }
+.step-desc { font-size:14px; color:var(--muted); line-height:1.7; }
+
+.services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.2rem; }
+.service-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.8rem 1.5rem; transition:border-color .25s,transform .25s; }
+.service-card:hover { border-color:rgba(59,130,246,.5); transform:translateY(-3px); }
+.svc-icon { font-size:2.2rem; margin-bottom:1rem; }
+.svc-title { font-size:16px; font-weight:700; color:#fff; margin-bottom:.4rem; }
+.svc-desc { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:1rem; }
+.svc-price { font-size:14px; font-weight:700; color:var(--accent); }
+
+.reviews-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.2rem; }
+.review-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.5rem; }
+.review-stars { color:var(--accent); font-size:15px; margin-bottom:.6rem; }
+.review-text { font-size:14px; color:var(--muted); line-height:1.7; margin-bottom:1rem; }
+.review-author { font-size:13px; font-weight:700; color:#fff; }
+.review-loc { font-size:12px; color:var(--muted); }
+
+.form-section { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:3rem 2.5rem; max-width:660px; margin:0 auto; }
+.form-title { font-size:1.5rem; font-weight:900; margin-bottom:.3rem; }
+.form-sub { color:var(--muted); font-size:14px; margin-bottom:2rem; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.form-group { margin-bottom:1.2rem; }
+label { font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:.4rem; letter-spacing:.5px; }
+input, select, textarea { width:100%; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); color:#fff; border-radius:10px; padding:12px 14px; font-family:'Cairo',sans-serif; font-size:14px; outline:none; transition:border .2s; }
+select { background-color:#1a2035; appearance:none; }
+input:focus, select:focus, textarea:focus { border-color:var(--blue-light); }
+textarea { resize:none; height:90px; }
+
+.gps-box { border:1px dashed rgba(59,130,246,.35); border-radius:14px; padding:1.2rem; margin-bottom:1.2rem; background:rgba(37,99,235,.06); }
+.gps-lbl { font-size:12px; font-weight:700; color:var(--muted); letter-spacing:.5px; margin-bottom:.8rem; }
+.gps-btn { width:100%; background:rgba(37,99,235,.15); border:1px solid rgba(59,130,246,.4); color:var(--blue-light); border-radius:10px; padding:12px; font-family:'Cairo',sans-serif; font-weight:700; font-size:14px; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.gps-btn:hover { background:rgba(37,99,235,.28); }
+.gps-btn.success { background:rgba(16,185,129,.15); border-color:rgba(16,185,129,.4); color:#10b981; cursor:default; }
+.gps-result { display:none; margin-top:.8rem; }
+.gps-coords { background:rgba(16,185,129,.08); border:1px solid rgba(16,185,129,.2); border-radius:8px; padding:10px 12px; font-size:13px; color:#10b981; font-weight:600; display:flex; align-items:center; gap:8px; margin-bottom:.6rem; }
+.map-preview { width:100%; height:200px; border-radius:10px; border:1px solid rgba(59,130,246,.2); overflow:hidden; position:relative; }
+.map-preview iframe { width:100%; height:100%; border:none; }
+.map-loading { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#0d1526; color:var(--muted); font-size:13px; }
+.gps-manual { margin-top:.7rem; font-size:12px; color:var(--muted); text-align:center; }
+.gps-manual a { color:var(--blue-light); cursor:pointer; text-decoration:underline; }
+
+.submit-btn { width:100%; background:var(--blue); color:#fff; border:none; border-radius:12px; padding:15px; font-family:'Cairo',sans-serif; font-weight:700; font-size:16px; cursor:pointer; transition:all .2s; margin-top:.4rem; display:flex; align-items:center; justify-content:center; gap:8px; }
+.submit-btn:hover { background:var(--blue-light); }
+.submit-btn:disabled { opacity:.6; cursor:default; }
+
+.success-screen { display:none; text-align:center; padding:2rem 1rem; }
+.success-screen .big { font-size:3.5rem; margin-bottom:1rem; }
+.success-screen h2 { font-size:1.4rem; font-weight:900; margin-bottom:.6rem; }
+.success-screen p { color:var(--muted); font-size:14px; line-height:1.8; }
+.wa-btn { display:inline-flex; align-items:center; gap:8px; background:#25d366; color:#fff; border:none; border-radius:12px; padding:13px 28px; font-family:'Cairo',sans-serif; font-weight:700; font-size:15px; cursor:pointer; margin-top:1.2rem; }
+.wa-btn:hover { opacity:.88; }
+
+.toast { position:fixed; bottom:2rem; right:2rem; background:#1e293b; border:1px solid rgba(59,130,246,.3); color:#fff; padding:14px 20px; border-radius:12px; font-size:14px; font-weight:600; z-index:999; display:none; animation:slideIn .3s ease; }
+@keyframes slideIn { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+.toast.error { border-color:rgba(239,68,68,.4); }
+
+footer { background:#060c1a; border-top:1px solid rgba(59,130,246,.1); padding:2.5rem 2rem; text-align:center; }
+.footer-logo { font-size:20px; font-weight:900; margin-bottom:.5rem; }
+.footer-logo span { color:var(--accent); }
+.footer-text { color:var(--muted); font-size:13px; margin-bottom:.3rem; }
+.footer-copy { color:rgba(148,163,184,.35); font-size:12px; margin-top:1.2rem; }
+
+.whatsapp-fab { position:fixed; bottom:2rem; left:2rem; z-index:200; width:56px; height:56px; background:#25d366; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 24px rgba(37,211,102,.35); cursor:pointer; transition:transform .2s; text-decoration:none; }
+.whatsapp-fab:hover { transform:scale(1.1); }
+.whatsapp-fab svg { width:28px; height:28px; fill:#fff; }
+
+@media(max-width:600px) {
+  .navbar { padding:0 1rem; }
+  .nav-links { display:none; }
+  .form-row { grid-template-columns:1fr; }
+  .form-section { padding:2rem 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">تك<span>فيكس</span></div>
+  <div class="nav-links">
+    <a href="#how">كيف يعمل</a>
+    <a href="#services">خدماتنا</a>
+    <a href="#reviews">آراء الزبائن</a>
+    <a href="#book">احجز</a>
+  </div>
+  <button class="nav-cta" onclick="go('book')">احجز الآن</button>
+</nav>
+
+<section class="hero">
+  <div>
+    <div class="hero-badge"><div class="dot"></div> خدمة متوفرة الآن في نابلس</div>
+    <h1>نجي نصلح<br><span>من باب دارك</span></h1>
+    <p class="hero-sub">صيانة كمبيوترات وجوالات بدون ما تتحرك من البيت — نجيك، نأخذ الجهاز، ونرجعلك إياه جديد</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="go('book')">🔧 احجز الآن مجاناً</button>
+      <button class="btn-secondary" onclick="go('services')">شوف خدماتنا</button>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">+<span>200</span></div><div class="stat-label">جهاز تم إصلاحه</div></div>
+  <div class="stat"><div class="stat-num"><span>24</span> ساعة</div><div class="stat-label">وقت الإصلاح المعتاد</div></div>
+  <div class="stat"><div class="stat-num"><span>100</span>%</div><div class="stat-label">ضمان على الشغل</div></div>
+  <div class="stat"><div class="stat-num"><span>0</span> ₪</div><div class="stat-label">توصيل مجاني</div></div>
+</div>
+
+<section class="sec" id="how">
+  <div class="section-tag">خطوات بسيطة</div>
+  <h2 class="section-title">كيف يعمل؟</h2>
+  <p class="section-sub">أسهل من ما تتوقع — بدون ما تخرج من البيت</p>
+  <div class="how-steps">
+    <div class="step-card"><div class="step-num">01</div><div class="step-icon">📱</div><div class="step-title">احجز أونلاين</div><div class="step-desc">اكمل الفورم وشارك موقعك — بياخذ دقيقتين بس</div></div>
+    <div class="step-card"><div class="step-num">02</div><div class="step-icon">🏠</div><div class="step-title">نجيك على الباب</div><div class="step-desc">يجيك الفني بالوقت المتفق عليه ويأخذ الجهاز من عندك</div></div>
+    <div class="step-card"><div class="step-num">03</div><div class="step-icon">🔧</div><div class="step-title">نصلح ونبعتلك تحديث</div><div class="step-desc">تتابع حالة الجهاز عبر واتساب حتى ما تحتاج تتصل</div></div>
+    <div class="step-card"><div class="step-num">04</div><div class="step-icon">✅</div><div class="step-title">نرجعلك الجهاز جديد</div><div class="step-desc">نوصلك الجهاز بعد الإصلاح مع ضمان على الشغل</div></div>
+  </div>
+</section>
+
+<section class="sec" id="services" style="padding-top:0;">
+  <div class="section-tag">خدماتنا</div>
+  <h2 class="section-title">وش نصلح؟</h2>
+  <p class="section-sub">بنتعامل مع كل أعطال الأجهزة الشائعة</p>
+  <div class="services-grid">
+    <div class="service-card"><div class="svc-icon">💻</div><div class="svc-title">صيانة لابتوب وكمبيوتر</div><div class="svc-desc">بطء، فيروسات، شاشة تالفة، بطارية، مفاتيح، تنظيف</div><div class="svc-price">يبدأ من 30 ₪</div></div>
+    <div class="service-card"><div class="svc-icon">📱</div><div class="svc-title">صيانة جوالات</div><div class="svc-desc">شاشة مكسورة، بطارية، شارجر، سماعة، كاميرا</div><div class="svc-price">يبدأ من 40 ₪</div></div>
+    <div class="service-card"><div class="svc-icon">🖨️</div><div class="svc-title">طابعات وملحقات</div><div class="svc-desc">إعداد، تنظيف، تبديل خرطوشة، اتصال شبكة</div><div class="svc-price">يبدأ من 25 ₪</div></div>
+    <div class="service-card"><div class="svc-icon">🌐</div><div class="svc-title">إعداد شبكات وواي فاي</div><div class="svc-desc">راوتر، تمديد إشارة، أمان شبكة البيت</div><div class="svc-price">يبدأ من 50 ₪</div></div>
+    <div class="service-card"><div class="svc-icon">💾</div><div class="svc-title">استرجاع بيانات</div><div class="svc-desc">صور، ملفات، جهات اتصال من أجهزة تالفة</div><div class="svc-price">يبدأ من 80 ₪</div></div>
+    <div class="service-card"><div class="svc-icon">🛡️</div><div class="svc-title">تنظيف فيروسات</div><div class="svc-desc">إزالة كاملة، تثبيت مضاد فيروسات، حماية البيانات</div><div class="svc-price">يبدأ من 35 ₪</div></div>
+  </div>
+</section>
+
+<section class="sec" id="reviews" style="padding-top:0;">
+  <div class="section-tag">آراء الزبائن</div>
+  <h2 class="section-title">شو قالوا عننا؟</h2>
+  <p class="section-sub">زبائن حقيقيين، تجارب حقيقية</p>
+  <div class="reviews-grid">
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">خدمة ممتازة! جوالي انكسرت شاشته، جاءوا عندي البيت وصلحوه بنفس اليوم</div><div class="review-author">أحمد الخطيب</div><div class="review-loc">نابلس — حي رفيديا</div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">لابتوبي كان بطيء جداً، أخذوه وردوه عليّ نفس اليوم وصار يطير. الأسعار معقولة</div><div class="review-author">سارة عبد الله</div><div class="review-loc">نابلس — المخفية</div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">أفضل شي هو إنك ما تحتاج تروح أي مكان. الفني جاء دقيق وشغله نظيف ومحترف</div><div class="review-author">محمد عمر</div><div class="review-loc">نابلس — العين</div></div>
+  </div>
+</section>
+
+<section class="sec" id="book" style="padding-top:0;">
+  <div class="section-tag">احجز الآن</div>
+  <h2 class="section-title" style="text-align:center;">اطلب الخدمة</h2>
+  <p class="section-sub" style="text-align:center;margin:0 auto 2.5rem;">بدون رسوم توصيل — هنتواصل معك خلال ساعة</p>
+  <div class="form-section">
+    <div id="formView">
+      <div class="form-title">تفاصيل الطلب</div>
+      <div class="form-sub">اكتب بياناتك وهنتواصل معك خلال ساعة</div>
+      <div class="form-row">
+        <div class="form-group"><label>الاسم</label><input type="text" id="name" placeholder="اسمك الكريم" /></div>
+        <div class="form-group"><label>رقم الجوال</label><input type="tel" id="phone" placeholder="05xxxxxxxx" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>نوع الجهاز</label>
+          <select id="device"><option value="">اختر...</option><option>لابتوب</option><option>كمبيوتر مكتبي</option><option>جوال</option><option>تابلت</option><option>طابعة</option><option>راوتر / شبكة</option></select>
+        </div>
+        <div class="form-group">
+          <label>الوقت المناسب</label>
+          <select id="time"><option value="">اختر...</option><option>صباح (9 - 12)</option><option>ظهر (12 - 3)</option><option>عصر (3 - 6)</option><option>مساء (6 - 8)</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>وصف المشكلة</label><textarea id="problem" placeholder="اشرح لنا المشكلة باختصار..."></textarea></div>
+      <div class="gps-box">
+        <div class="gps-lbl">📍 موقعك — عشان الفني يلاقيك بسهولة</div>
+        <button class="gps-btn" id="gpsBtn" onclick="getLocation()"><span>🗺️</span> شارك موقعك الحالي</button>
+        <div class="gps-result" id="gpsResult">
+          <div class="gps-coords"><span>✅</span> <span id="coordsText"></span></div>
+          <div class="map-preview">
+            <div class="map-loading" id="mapLoading">جاري تحميل الخريطة...</div>
+            <iframe id="mapFrame" src="" onload="document.getElementById('mapLoading').style.display='none'"></iframe>
+          </div>
+        </div>
+        <div class="gps-manual">أو <a onclick="showManual()">أدخل العنوان يدوياً</a></div>
+        <div id="manualAddr" style="display:none;margin-top:.7rem;"><input type="text" id="manualInput" placeholder="مثال: نابلس، حي رفيديا، شارع الجامعة" /></div>
+      </div>
+      <button class="submit-btn" id="submitBtn" onclick="submitForm()"><span>🚀</span> أرسل الطلب</button>
+    </div>
+    <div class="success-screen" id="successView">
+      <div class="big">🎉</div>
+      <h2>وصل طلبك!</h2>
+      <p>شكراً <strong id="successName"></strong>،<br>هنتواصل معك خلال ساعة لتأكيد الموعد</p>
+      <button class="wa-btn" onclick="openWA()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        تواصل عبر واتساب
+      </button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">تك<span>فيكس</span></div>
+  <div class="footer-text">نابلس | صيانة كمبيوترات وجوالات من الباب وإليه</div>
+  <div class="footer-text">📞 0599-000-000</div>
+  <div class="footer-copy">© 2025 تكفيكس — جميع الحقوق محفوظة</div>
+</footer>
+
+<a class="whatsapp-fab" href="#" onclick="openWA(); return false;">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let userLat = null, userLng = null;
+
+  function go(id) { document.getElementById(id).scrollIntoView({ behavior:'smooth' }); }
+
+  function showToast(msg, isError) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast' + (isError ? ' error' : '');
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3500);
+  }
+
+  function getLocation() {
+    const btn = document.getElementById('gpsBtn');
+    btn.innerHTML = '<span>⏳</span> جاري تحديد موقعك...';
+    btn.onclick = null;
+    if (!navigator.geolocation) { showToast('المتصفح لا يدعم GPS', true); resetBtn(); return; }
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        userLat = pos.coords.latitude.toFixed(6);
+        userLng = pos.coords.longitude.toFixed(6);
+        btn.classList.add('success');
+        btn.innerHTML = '<span>✅</span> تم تحديد موقعك!';
+        document.getElementById('coordsText').textContent = userLat + ' , ' + userLng;
+        document.getElementById('mapFrame').src = 'https://maps.google.com/maps?q=' + userLat + ',' + userLng + '&z=16&output=embed';
+        document.getElementById('gpsResult').style.display = 'block';
+      },
+      function(err) {
+        showToast(err.code === 1 ? 'فعّل إذن الموقع من إعدادات المتصفح' : 'تعذر تحديد الموقع، أدخل عنوانك يدوياً', true);
+        resetBtn();
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  function resetBtn() {
+    const btn = document.getElementById('gpsBtn');
+    btn.classList.remove('success');
+    btn.innerHTML = '<span>🗺️</span> شارك موقعك الحالي';
+    btn.onclick = getLocation;
+  }
+
+  function showManual() { document.getElementById('manualAddr').style.display = 'block'; }
+
+  async function submitForm() {
+    const name    = document.getElementById('name').value.trim();
+    const phone   = document.getElementById('phone').value.trim();
+    const device  = document.getElementById('device').value;
+    const time    = document.getElementById('time').value;
+    const problem = document.getElementById('problem').value.trim();
+    const manual  = document.getElementById('manualInput').value.trim();
+
+    if (!name || !phone || !device) { showToast('⚠️ من فضلك اكمل البيانات الأساسية', true); return; }
+    if (!userLat && !manual) { showToast('⚠️ شارك موقعك أو أدخل عنوانك يدوياً', true); return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳</span> جاري الإرسال...';
+
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, device, time, problem, lat: userLat, lng: userLng, address: manual })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'خطأ في الإرسال');
+
+      document.getElementById('successName').textContent = name;
+      document.getElementById('formView').style.display = 'none';
+      document.getElementById('successView').style.display = 'block';
+    } catch(e) {
+      showToast('❌ ' + e.message, true);
+      btn.disabled = false;
+      btn.innerHTML = '<span>🚀</span> أرسل الطلب';
+    }
+  }
+
+  function openWA() {
+    const name    = document.getElementById('name').value.trim();
+    const phone   = document.getElementById('phone').value.trim();
+    const device  = document.getElementById('device').value;
+    const time    = document.getElementById('time').value;
+    const problem = document.getElementById('problem').value.trim();
+    const manual  = document.getElementById('manualInput').value.trim();
+    const loc     = userLat ? 'https://maps.google.com/?q=' + userLat + ',' + userLng : (manual || 'لم يُحدد');
+    const msg = `مرحبا، أريد حجز صيانة 🔧\n\nالاسم: ${name}\nالجوال: ${phone}\nالجهاز: ${device}\nالوقت: ${time||'لم يُحدد'}\nالمشكلة: ${problem||'لم يُذكر'}\nالموقع: ${loc}`;
+    window.open('https://wa.me/970599000000?text=' + encodeURIComponent(msg), '_blank');
+  }
+</script>
+</body>
+</html>
